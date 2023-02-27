@@ -1,0 +1,37 @@
+{% import 'macros/forms.html' as f with context %}
+
+{% extends "layouts/app.html" %}
+{% block title %}Settings{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+
+<div class="row">
+    <div class="col-6">
+
+        <div class="app-form-wrapper">
+            <h2>Account</h2>
+            <a href="{{ url_for('user.update_password') }}">Update password</a>
+        </div>
+    </div>
+    <div class="col-6">
+
+        <div class="app-form-wrapper">
+            <h2>Notifications</h2>
+            <a href="#" id="sub_button">Start push notifications</a>
+            <a href="#" id="unsub_button">Stop push notifications</a>
+        </div>
+    </div>
+
+</div>
+<script>
+
+    window.onload = function () {
+
+    }
+</script>
+
+{% endblock %}

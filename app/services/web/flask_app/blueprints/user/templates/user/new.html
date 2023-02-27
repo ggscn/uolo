@@ -1,0 +1,67 @@
+{% import 'macros/forms.html' as f with context %}
+
+{% extends "layouts/page.html" %}
+{% block title %}Create Account{% endblock %}
+{% block content %}
+
+<div class="row lg-margin-top">
+
+    <div class="col-6">
+        <wired-card class="wired-card-container app-form-wrapper">
+            
+
+
+            <h2 class="lg-margin-bottom sm-margin-top">Create an account</h2>
+            <span>Creating an account lets you start logging and saving your plants</span>
+            <div class="lg-margin-bottom"></div>
+
+            {% call f.form_tag('user.new') %}
+
+
+            {% call f.form_field(form.email, css_class="standard_form_field") %}
+            {% endcall %}
+            <br>
+            {% call f.form_field(form.password, css_class="standard_form_field") %}
+            {% endcall %}
+
+            <div class="row lg-margin-bottom lg-margin-top">
+                <div class="col-2">
+                    {% call f.form_bool(form.accept_tos, css_class="tgl tgl-light", label_css_class="tgl-btn") %}
+                    {% endcall %}
+                </div>
+                <div class="col-10">
+                    <span>Accept Terms?</span>
+                </div>
+            </div>
+
+            <div class="col center-block ">
+                <div align=center>
+                    <wired-button type="submit">Sign Up</wired-button>
+                </div>
+            </div>
+
+            {% endcall %}
+        </wired-card>
+    </div>
+
+    <div class="col-6">
+        <wired-card class="wired-card-container app-form-wrapper">
+
+            <h2 class="md-margin-bottom sm-margin-top">Why create an account?</h2>
+            <h4>Because you can:</h4>
+            <ul>
+                <li>
+                    <h4>Keep a running log of all your plants</h4>
+                </li>
+                <li>
+                    <h4>Keep track of your plant stats</h4>
+                </li>
+                <li>
+                    <h4>Get watering notifications</h4>
+                </li>
+            </ul>
+        </wired-card>
+    </div>
+</div>
+
+{% endblock %}

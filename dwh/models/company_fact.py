@@ -26,3 +26,20 @@ class CompanyFact(ModelMixin, Base):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+
+class CompanyFactAnalysis(ModelMixin, Base):
+    __tablename__ = 'company_fact_analyses'
+
+    id = Column(Integer, primary_key=True)
+
+    val = Column(BigInteger())
+    ticker = Column(String())
+    fact_description = Column(String())
+    form_type = Column(String())
+    filed = Column(String())
+    frame = Column(String())
+    analysis_label = Column(String())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

@@ -1,0 +1,205 @@
+{% import 'macros/lists.html' as lists %}
+
+{% extends "layouts/app.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block head %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"
+    integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='scripts/vendor/rough.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/vendor/chartjs-plugin-rough.min.js') }}"></script>
+{{ super() }}
+
+{% endblock %}
+{% block content %}
+
+<div class="row md-margin-bottom">
+
+</div>
+
+<div class="row">
+
+    <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12">
+        <div class="row md-margin-bottom">
+  
+            <div class="col-xl-12 col-lg-8 col-md-12">
+
+                <wired-card id="wired-card-container" class="wired-card-container">
+
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-5 col-md-4 col-sm-12">
+                            <div class="dash-title">Overview</div>
+                        </div>
+                        <div class="col-xl-6 col-lg-7 col-md-8 col-sm-12">
+                            <div class="dash-filter-container">
+                                <wired-button class="sm-margin-top">
+                                    <span class="chart-filter-button-small" id="plants_added_total">Total by
+                                        month</span>
+                                </wired-button>
+                                <wired-button class="sm-margin-top">
+                                    <span id="plants_added_rate" class="chart-filter-button-small">Rate by month</span>
+                                </wired-button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-xl-10 col-lg-9 col-md-12 col-sm-12">
+                            <div class="dash-chart-container">
+                                <canvas id="chart"></canvas>
+                            </div>
+                            <div class="d-none md-padding-bottom d-md-block d-lg-block d-xl-block"></div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-12 col-sm-12 dash-chart-stat">
+                            <div class="dash-chart-stat-item">
+                                <span class="dash-chart-stat-title">TOTAL PLANTS</span><br>
+                                <span class="dash-chart-stat-value">{{ stats.total_plants }}</span>
+                            </div>
+                            <div class="dash-chart-stat-item">
+                                <span class="dash-chart-stat-title">TOTAL COLLECTIONS</span><br>
+                                <span class="dash-chart-stat-value">{{ stats.total_collections }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </wired-card>
+
+            </div>
+            <div class="d-none d-lg-block d-xl-none col-lg-4">
+                    <wired-card class="wired-card-container">
+                        <div class="dash-calendar-container">
+    
+                            <div class="dash-title">My Agenda</div>
+                            <div class="sm-margin-top " id="dash-calendar">
+    
+                                {% for date in dates %}
+                                <div class="dash-calendar-day md-padding-bottom">
+                                    <span class="dash-calendar-day-letter">{{ date.l }}</span><br><span
+                                        class="dash-calendar-day-num">{{ date.n }}</span>
+                                    {% if date.has_watering %}
+                                    <br>
+                                    <div class="dash-calendar-circle"></div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+    
+                            </div>
+                            <div class="dash-event-container">
+                                {% for event in events %}
+                                <div class="dash-event">
+    
+                                    <span class="dash-event-title">
+                                        <a href="{{ url_for('plant.view', slug=event.slug) }}">{{ event.name }}</a>
+                                    </span>
+                                    <span class="dash-event-type">
+                                        {{ event.type }}
+                                    </span>
+                                    <br>
+                                    <span class="dash-event-date">
+                                        {{ event.date }}
+                                    </span>
+    
+                                </div>
+                                {% endfor %}
+                                {% if events|length == 0 %}
+                                <p class="text-center lg-margin-top">All caught up :)</p>
+                                {% endif %}
+                            </div>
+                        </div>
+    
+                </div>
+        </div>
+        <div class="row md-margin-bottom">
+            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 current-dt-container md-margin-bottom">
+                <span id="current-weekday"></span><br>
+                <span id="current-dt"></span>
+            </div>
+
+
+            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 md-margin-bottom">
+                <wired-card elevation="3" class="wired-card-container">
+                    <div class="sm-padding-left">
+                        <div class="row">
+                            <div class="col-3">
+                                <div>
+                                    <span class="dash-stat-value">{{ stats.total_plants_watering_today }}</span>
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <div class="dash-stat-title-container">
+                                    <span class="dash-stat-title">Plants to water today</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </wired-card>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <wired-card class="wired-card-container">
+                    <div class=" sm-padding-left">
+                        <div class="row">
+                            <div class="col-3">
+                                <div>
+                                    <span class="dash-stat-value">{{ stats.total_collections }}</span>
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <div class="dash-stat-title-container">
+                                    <span class="dash-stat-title">Plants to repot today</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </wired-card>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 d-lg-none d-xl-block md-margin-bottom">
+        <wired-card class="wired-card-container">
+            <div class="dash-calendar-container">
+
+                <div class="dash-title">My Agenda</div>
+                <div class="sm-margin-top " id="dash-calendar">
+
+                    {% for date in dates %}
+                    <div class="dash-calendar-day md-padding-bottom">
+                        <span class="dash-calendar-day-letter">{{ date.l }}</span><br><span
+                            class="dash-calendar-day-num">{{ date.n }}</span>
+                        {% if date.has_watering %}
+                        <br>
+                        <div class="dash-calendar-circle"></div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                </div>
+                <div class="dash-event-container">
+                    {% for event in events %}
+                    <div class="dash-event">
+
+                        <span class="dash-event-title">
+                            <a href="{{ url_for('plant.view', slug=event.slug) }}">{{ event.name }}</a>
+                        </span>
+                        <span class="dash-event-type">
+                            {{ event.type }}
+                        </span>
+                        <br>
+                        <span class="dash-event-date">
+                            {{ event.date }}
+                        </span>
+
+                    </div>
+                    {% endfor %}
+                    {% if events|length == 0 %}
+                    <p class="text-center lg-margin-top">All caught up :)</p>
+                    {% endif %}
+                </div>
+            </div>
+
+    </div>
+
+</div>
+<script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% import 'macros/forms.html' as f with context %}
+
+{% extends "layouts/app.html" %}
+{% block title %}View User{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+
+
+<div class="row">
+    <div class="col-6">
+
+        <div class="app-form-wrapper">
+            <h2>Password</h2>
+            <a href="{{ url_for('user.reset_password') }}">Send password reset</a>
+
+            <h2 class="sm-margin-top">Notifications</h2>
+            <a href="#" id="sub_button">Start push notifications</a>
+            <br>
+            <a href="#" id="unsub_button">Stop push notifications</a>
+            <h2 class="sm-margin-top">Total Plants</h2>
+            <p>{{ stats.total_plants }}</p>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="app-form-wrapper">
+            <div class="row md-margin-bottom">
+
+                <h2 class="sm-margin-bottom">Update Info</h2>
+            </div>
+
+            {% call f.form_tag('admin.view_user',**{'slug':user.slug}) %}
+            <div class="row sm-margin-bottom">
+
+
+
+                {% call f.form_field(form.email, css_class="standard_form_field") %}
+                {% endcall %}
+                {% call f.form_field(form.role, css_class="standard_form_field") %}
+                {% endcall %}
+            </div>
+
+            <div class="row ">
+                <div class="col center-block ">
+                    <div align=center>
+                        <button type="submit" class="btn save-button ">Save</button>
+                    </div>
+                </div>
+            </div>
+            {% endcall %}
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

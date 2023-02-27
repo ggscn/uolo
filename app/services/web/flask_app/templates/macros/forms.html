@@ -1,0 +1,46 @@
+{%- macro form_tag(endpoint,fid='', css_class='form-group', method='POST', enctype='application/x-www-form-urlencoded') -%}
+<form action="{{ url_for(endpoint, **kwargs) }}" method="{{ method }}" id="{{ fid }}" class="{{ css_class }}"
+  enctype="{{ enctype }}" role="form">
+  {{ form.hidden_tag() }}
+  {{ caller () }}
+</form>
+
+{%- endmacro -%}
+
+{%- macro form_field(field, css_class='form-field', label_css_class=none, icon_class='') -%}
+
+{% if label_css_class is none %}
+{{ field.label }}
+{% else %}
+{{ field.label(class=label_css_class) }}
+{% endif %}
+<br>
+{% if field.errors %}
+{{ field(class=css_class, **kwargs) }}
+<ul class=errors>
+  {% for error in field.errors %}
+  <li>{{ error }}</li>
+  {% endfor %}
+</ul>
+{%  else %}
+
+{{ field(class=css_class, **kwargs)|safe }}
+
+{% endif %}
+{%- endmacro -%}
+
+
+{# Render a form for searching. #}
+{%- macro search(endpoint) -%}
+  {% call form_tag(endpoint, method='get') %}
+    <label for="q"></label>
+    <div class="input-group md-margin-bottom">
+      <input type="text" class="form-control"
+             id="q" name="q" value="{{ request.args.get('q', '') }}"
+             placeholder="Search by typing, then press enter...">
+    <span class="input-group-addon">
+      <i class="fa fa-fw fa-search"></i>
+    </span>
+    </div>
+  {% endcall %}
+{%- endmacro -%}

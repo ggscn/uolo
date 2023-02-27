@@ -1,0 +1,51 @@
+{% extends "layouts/app.html" %}
+{% block title %}Admin Dash{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<script>
+    var columns = {{ columns | safe }};
+    fetch_url = '{{ url_for("admin.search_users") }}';
+    obj_view_endpoint = '/admin/user/view/';
+    no_results_html = '<br>No users found.';
+</script>
+
+<div class="row">
+    <div class="col-6">
+        <div class="app-form-wrapper">
+            <h2>User Management</h2>
+        </div>
+    </div>
+    <div class="col-6">
+
+        <div class="app-form-wrapper">
+            <div class="row md-margin-bottom">
+                <div class="col-3">
+                    <h2 class="search-box-title">Search Users</h2>
+                </div>
+                <div class="col-9">
+                    <input caller="<Macro anonymous>" autocomplete="off" class="standard_form_field" id="q" name="q"
+                        type="text" value="" placeholder="Search plants by name">
+                </div>
+            </div>
+
+            <table class="table borderless">
+                <thead class="thead-light">
+                    <tr id="table-header-row"></tr>
+                </thead>
+                <tbody id="tbody">
+                    <tr></tr>
+                </tbody>
+
+            </table>
+            <div align="center">
+                <ul id="paginator" class="pagination">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='scripts/lists.js') }}"></script>
+{% endblock %}

@@ -2,17 +2,18 @@ import sqlalchemy
 from sqlalchemy import select, inspect
 
 class ModelMixin:
-    def __init__(self) -> None:
-        self.engine = self.create_engine()
+    def __init__(self, database='finance_dwh') -> None:
+        self.engine = self.create_engine(database)
 
     @classmethod
-    def create_engine(cls):
+    def create_engine(cls, database='finance_dwh'):
         url_object = sqlalchemy.engine.URL.create(
             "postgresql+psycopg2",
             username="pguser",
             password="pgpass",
             host="localhost",
-            database="finance_dwh",
+            database=database,
+            port=5431
         )
 
         engine = sqlalchemy.create_engine(

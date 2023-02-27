@@ -1,0 +1,1 @@
+from flask_app.blueprints.analysis.views import analysis

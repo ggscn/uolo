@@ -1,0 +1,60 @@
+{% import 'macros/forms.html' as f with context %}
+
+{% extends 'layouts/app.html' %}
+{% block content %}
+{{ f.search('watchlist.categories') }}
+
+  {% if categories.total == 0 %}
+    <h3>No results found</h3>
+
+    {% if request.args.get('q') %}
+      <p>Try limiting or removing your search terms.</p>
+    {% else %}
+      <p>There are no categories present,
+         you should <a href="{{ url_for('watchlist.watchlist_new') }}">sign up</a>.</p>
+    {% endif %}
+  {% else %}
+    {% call f.form_tag('watchlist.categories_bulk_delete') %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>
+              <label for="select_all"></label>
+              <input id="select_all" name="select_all" type="checkbox">
+            </th>
+            <th class="col-header">
+              {{ items.sort('name') }}
+            </th>
+            <th id="bulk_actions" colspan="4">
+              <div class="form-inline">
+                {{ f.field(bulk_form.scope, inline=True) }}
+                  <button type="submit"
+                          class="btn btn-danger btn-sm">
+                    Delete items
+                  </button>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for category in categories.items %}
+          <tr>
+            <td>
+              <label for="bulk_ids"></label>
+              <input class="checkbox-item" id="bulk_ids" name="bulk_ids"
+                     type="checkbox" value="{{ category.id }}">
+            </td>
+            <td>
+                {{ category.name }}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endcall %}
+
+    {{ items.paginate(categories) }}
+  {% endif %}
+
+
+{% endblock %}

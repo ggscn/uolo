@@ -1,0 +1,33 @@
+{% import 'macros/flash.html' as flash with context %}
+
+{% extends 'layouts/base.html' %}
+
+{% block page_type %}
+
+<body class="page">
+
+    <nav class="navbar page-navbar navbar-light">
+        <a class="navbar-brand page-navbar-brand" href="{{ url_for('analysis.home') }}">uolo</a>
+
+    </nav>
+
+    <main>
+        <div class="container">
+            {{ flash.render() }}
+
+        </div>
+        <div class="container-fluid container-full-height">
+
+         
+                {% block content %}{% endblock %}
+
+    
+
+
+        </div>
+    </main>
+
+
+
+</body>
+{% endblock %}

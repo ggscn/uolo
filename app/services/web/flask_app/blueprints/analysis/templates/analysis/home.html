@@ -1,0 +1,133 @@
+{% import 'macros/forms.html' as f with context %}
+
+{% extends 'layouts/app.html' %}
+{% block content %}
+<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+<div class="container-fluid container-full-height container-main">
+    <div class="row">
+        <div class="col-xl-3 col-lg-4 col-md-4">
+            <nav class="ml-2 app-navbar navbar-light app-sidebar-nav navbar-margin-bottom text-center">
+                <a class=" app-navbar-brand" href="{{ url_for('analysis.home') }}">flask_app</a>
+                <hr class="divider">
+            </nav>
+            <div class="row lg-margin-top lg-margin-bottom">
+                <div class="col-lg-12">
+                    <div class="ml-2 mr-0">
+                        <div class="tip lg-margin-top md-margin-bottom text-center">
+                            <span class="tip-text">Mark locations mentioned in a book. Search by title or author. <a
+                                    href="#more_info">Learn More</a>.</span>
+                        </div>
+                        {{ data }}
+                        <div class="lg-margin-top sm-margin-bottom">
+                            {% call f.form_field(form.title, css_class="standard_form_field", label_css_class="app-label", placeholder="Title") %}
+                            {% endcall %}
+                        </div>
+                        <div class="sm-margin-top md-margin-bottom">
+                            {% call f.form_field(form.author, css_class="standard_form_field", label_css_class="app-label", placeholder="Author Name") %}
+                            {% endcall %}
+                            <span id="warner" class="warning text-center">Need to input either author or title</span>
+                        </div>
+                        <div class="md-margin-top lg-margin-bottom">
+                            <div class="row">
+                                <div class="col">
+
+                                </div>
+                                <div class="col">
+                                    <div id="button-wrap">
+                                        <button type="submit" class="action-button" id="query_button">Search <div
+                                                id="underline"></div>
+                                        </button>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col">
+                                    <div id="loader" class="loader"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md-margin-top lg-margin-bottom text-center">
+                            <em>Can't think of anything? Try <a id="helper-1">Moby Dick</a></em>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-xl-9 col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-12">
+                    <div class="mr-2 ml-0">
+                        <div class="row md-margin-top md-margin-bottom">
+                            <div class="container-fluid">
+                                <div id="map" class="map"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid container-secondary">
+    <div class="row">
+
+        <div class="col-xl-6 col-lg-12 text-center side-divider-secondary">
+            <div class="row">
+                <div class="col-xl-2 col-lg-0"></div>
+                <div class="col-xl-8 lg-margin-bottom lg-margin-top text-justify">
+                    <h2 class="lg-margin-top md-margin-bottom text-center">How to use it</h2><a id="more_info"></a>
+                    <hr class="divider-secondary lg-margin-bottom">
+                    
+                    <span class="tip-text ">flask_app adds markers on the map for locations that are mentioned in your
+                        favourite (public domain) books. The number of mentions found for a given location is shown as a number in each marker.</span>
+                    <div class="tip lg-margin-top md-margin-bottom text-center">
+                        <span class="tip-text text-justify md-margin-bottom">Search tips</span>
+                        <ul class="md-margin-top tip-text">
+                            <li class="tip-text text-justify">Queries are case-insensitive</li>
+                            <li class="tip-text text-justify">Only books in the public domain are covered. Practically speaking,
+                                this means anything written between 1800-1920</li>
+                            <li class="tip-text text-justify">You can enter a title and/or a author name and results for
+                                all will be included</li>
+                            <li class="tip-text text-justify">Results are not exhaustive and results are omitted if
+                                coordinates are not found</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-0"></div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-12">
+            <div class="row">
+                <div class="col-xl-2 col-lg-0"></div>
+                <div class="col-xl-8 lg-margin-bottom lg-margin-top">
+                    <h2 class="lg-margin-top md-margin-bottom text-center">How it works</h2>
+                    <hr class="divider-secondary lg-margin-bottom">
+
+                    <span class="tip-text text-justify">This app is based in large part on the existing book location
+                        data found in the gdelt-hathitrust and internetarchivebooks Google BigQuery datasets. <br><br>
+                        A smaller result set is synced from BigQuery into a local postgres database to reduce query
+                        costs & latency.<br><br>Maps are generated using OpenLayers and markers are placed based on the latitude and 
+                        longitudes of each location.
+
+                    </span><br>
+                    
+                    <br><br>
+                    <a href="https://github.com/ggscn/flask_app">View on Github</a>
+                    <br>
+                    <!-- <a href="twitter.com/pguser">Get in touch on Twitter</a> -->
+                </div>
+                <div class="col-xl-2 col-lg-0"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script src="{{ url_for('static', filename='scripts/home.js') }}" async></script>
+
+{% endblock %}

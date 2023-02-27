@@ -1,0 +1,80 @@
+{% macro render_pagination(pagination, endpoint) %}
+<div align="center">
+  <ul class="pagination">
+
+    {% if pagination.has_prev %}
+      <li class="page-item">
+        <a href="{{ url_for(endpoint, page=pagination.prev_num) }}" aria-label="Previous" class="page-link" >
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+    {% endif %}
+
+    {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=3, right_edge=1) %}
+      {% if p %}
+        {% if p != pagination.page %}
+          <li class="page-item">
+            <a href="{{ url_for(endpoint, page=p) }}" class="page-link" >{{ p }}</a>
+          </li>
+        {% else %}
+          <li class="active page-item">
+            <a href="{{ url_for(endpoint, page=p) }}" class="page-link" >{{ p }}</a>
+          </li>
+        {% endif %}
+      {% else %}
+        <li class="disabled page-item">
+          <span class="page-link"  class="ellipsis">&hellip;</span>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+      <li class="page-item">
+        <a href="{{ url_for(endpoint, page=pagination.next_num) }}" aria-label="Next" class="page-link" >
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+</div>
+{% endmacro %}
+
+{%- macro tabulate(items, columns, view_endpoint, link_col_index=2) -%}
+
+
+<table class="table borderless">
+    <thead class="thead-light">
+        <tr>
+            {% for column in columns %}
+            {% if loop.index == 1 %}
+            <th scope="col ">{{ column  | title| replace("_", " ") }}</th>
+            {% else %}
+            <th scope="col" class="no-left-padding">{{ column  | title| replace("_", " ") }}</th>
+            {% endif %}
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items.items %}
+        <tr>
+            {% for column in columns %}
+            {% if loop.index == link_col_index %}
+            <td><a href="{{url_for(view_endpoint,slug=item.slug)}}">{{ item[column] }}</a></td>
+            {% elif 'thumbnail' in column and item[column] is not none %}
+            <td><img class="search-thumbnail" src="{{ item[column] }}">
+            </td>
+            {% elif 'thumbnail' in column and item[column] is none %}
+            <td><div class="search-thumbnail-placeholder">No Photo</div>
+            </td>  
+            {% else %}
+            <td>{{ item[column]}}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+
+    </tbody>
+</table>
+{%- endmacro -%}

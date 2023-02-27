@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+
+  redis:
+    image: 'redis:4.0.6-alpine'
+    command: redis-server --requirepass atemporarydevpassword
+    volumes:
+      - 'redis:/var/lib/redis/data'
+    ports:
+      - '6379:6379'
+
+  web:
+    build: ./services/web
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - ./services/web/:/usr/src/app/
+    ports:
+      - 5000:5000
+    env_file:
+      - .env.dev
+    secrets:
+      - service_account
+
+  celery:
+    build: ./services/web
+    command: celery -A flask_app.blueprints.analysis.tasks worker -l INFO 
+    env_file:
+      - .env.dev
+    volumes:
+      - '.:/flask_app'
+    secrets:
+      - service_account
+
+secrets:
+   service_account:
+     file: /home/pguser/code/secrets/fyllo-service-account.json
+
+volumes:
+  redis:

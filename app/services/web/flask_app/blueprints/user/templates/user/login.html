@@ -1,0 +1,41 @@
+{% import 'macros/forms.html' as f with context %}
+
+{% extends "layouts/page.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+
+        <div class="col-6">
+            <wired-card  class="wired-card-container app-form-wrapper lg-margin-top">
+            <div class="row md-margin-bottom">
+    
+                <h2 class="">Log In</h2>
+           
+            </div>
+    
+            {% call f.form_tag('user.login') %}
+            <div class="row lg-margin-bottom">
+    
+    
+                
+                {% call f.form_field(form.email, css_class="standard_form_field") %}
+                {% endcall %}
+                {% call f.form_field(form.password, css_class="standard_form_field") %}
+                {% endcall %}
+                <span><a href="{{ url_for('user.reset_password') }}">Forgot password?</a></span>
+            </div>
+            <div class="row ">
+                <div class="col center-block ">
+                    <div align=center>
+                        <wired-button><button type="submit" class="wired-btn">Log In</button></wired-button>
+                    </div>
+                </div>
+            </div>
+            {% endcall %}
+        </wired-card>
+        </div>
+        <div class="col-6"></div>
+    </div>
+
+{% endblock %}

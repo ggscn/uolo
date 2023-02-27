@@ -1,0 +1,1 @@
+from flask_app.blueprints.watchlist.views import watchlist

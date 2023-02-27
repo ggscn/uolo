@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164604796-1"></script>
+    <script>
+        {% if cookies_check() %}
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date(), { 'anonymize_ip': true, 'store_gac': false });
+
+        gtag('config', 'UA-164604796-1');
+        {% endif %}
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/css/ol.css" type="text/css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+
+
+    <title>{% block title %}{% endblock %}flask_app</title>
+
+    <script>
+        $(document).ready(function () {
+            $('#cookie-consent').click(function () {
+                document.cookie = "cookie_consent=true";
+                $('#cookie-consent-container').hide();
+                window.dataLayer = window.dataLayer || [];
+                function gtag() { dataLayer.push(arguments); }
+                gtag('js', new Date(), { 'anonymize_ip': true, 'store_gac': false });
+
+                gtag('config', 'UA-164604796-1');
+            });
+            $('#cookie-consent-close').click(function () {
+                $('#cookie-consent-container').hide();
+            });
+        });
+
+    </script>
+    {% endblock %}
+</head>
+
+{% block page_type %}{% endblock %}
+
+{% if cookies_check() %}
+{# then user has already consented so no requirement for consent banner #}
+{% else %}
+{# show a cookie consent banner #}
+<div id="cookie-consent-container">
+    <div id="cookie-consent-container-inner">
+        <p id="cookie-consent-text">By continuing to visit this site, you accept the use of cookies by Google Analytics
+            for statistical purposes. <a href="/privacy-policy/#cookies" class="cb-policy">Cookie Policy</a>
+            <button id="cookie-consent" class="cookie-consent-button" class="">Accept</button>
+            <button id="cookie-consent-close" class="cookie-consent-button">Deny</button>
+    </div>
+</div>
+
+{% endif %}
+
+<footer>
+    <div class="container-fluid">
+        <div class="row lg-padding-top lg-padding-bottom">
+            <div class="col-1"></div>
+            <div class="col-5 text-left md-padding-left">
+                <a class="footer-link" href="/privacy-policy">Privacy Policy</a>&nbsp;&bull;
+                <a class="footer-link" href="/terms">Terms and conditions</a>&nbsp;&bull;
+
+            </div>
+            <div class="col-6 text-right md-padding-right">
+                <p>&copy; Copyright 2020</p> <a class="footer-link" href="{{url_for('analysis.home')}}">flask_app</a>.
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+</html>
