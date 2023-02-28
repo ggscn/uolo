@@ -1,65 +1,9 @@
-.map {
-    height: 95vh;
-    width: 100%;
-    overflow: hidden;
-    border: 9px solid #1a1a1a;
-}
-
-#map > div > div.ol-unselectable.ol-layers > div > canvas{
-    border-radius: var(--border-radius-content);
-}
-
-.ol-control {
-    border: 1px solid black;
-}
-
-.ol-control button {
-    background-color: black;
-    color: white;
-    border: 1px solid black;
-}
-
-.ol-control button:hover {
-    background-color: white;
-    color: black;
-    border: 1px solid black;
-}
-
-ul{
-    margin-left:-15px;
-  }
-
-.container-main{
-    background-color: white;
-    /* border-bottom: 8px solid black; */
-}
-
-.container-secondary{
-    border-bottom: 8px solid black;
-    background-color: white;
-}
-
-@media only screen and (min-width: 600px) {
-    .side-divider-secondary{
-        /* border-right: 8px solid black;; */
-    }
-  }
-
-
-.container-app-content{
-    
-}
-
-a{
-    border-bottom: 3px black solid;
-}
-
 :root {
     --field-border-color: #4f4fad;
     --field-background-color: #fff;
     --input-border-radius: 0px;
     --app-sidebar-background-color: #fff;
-    --app-content-background-color: #fff;
+    --app-content-background-color: ##1a1a1a;
     --app-grey-background-color: #e9ecef;
     --app-sidebar-font-color: #5a5a5a;
     --page-nav-link-color: #f0f4f3;
@@ -89,7 +33,6 @@ a{
     height: 60px;
     border-radius: var(--input-border-radius);
     cursor: pointer;
-    font-family: var(--brand-font);
     font-size: 18px;
     text-transform: uppercase;
     padding-top: 5px;
@@ -101,6 +44,7 @@ a{
     background-color: #4f4fad;
     color: white;
 }
+
 
 #button-wrap{
     position: relative;
@@ -118,14 +62,21 @@ a{
     position: absolute;
     transition: all .3s ease-Out;
     bottom: 0;
+    text-decoration-style: dotted;
   }
   
   .action-button:hover #underline {
     left: 0;
   }
 
-
-
+  .tbodyDiv{
+    max-height: clamp(5em,80vh,500px);
+    overflow: auto;
+    }
+  .table-wrapper {
+    max-height: 50vh;
+    overflow: auto;
+  }
 
 .loader {
     margin-top: 15px;
@@ -189,7 +140,7 @@ input[type=text].standard_form_field:hover {
 .tip {
     border-color: #1a1a1a;
     border-width: 8px;
-    border-style: solid;
+    border-style: dashed;
     background-color: #ffff01;
     border-radius: var(--input-border-radius);
     padding: 25px;
@@ -202,7 +153,8 @@ input[type=text].standard_form_field:hover {
 }
 
 .divider{
-    border-width: 8px;
+    border-width: 1px;
+    border-style: solid;
     border-color: #1a1a1a;
 }
 
@@ -227,28 +179,8 @@ input[type=text].standard_form_field:hover {
 }
 
 footer {
-    background-color: #4f4fad;
     color: #8a8f8f;
-    border-bottom: 8px solid #1a1a1a;
-}
 
-.footer-link {
-    color: #fff;
-}
-
-.footer-link:hover {
-    color: white;
-    text-decoration: none;
-}
-
-h1, h2, h3, h4 {
-    font-family: var(--brand-font);
-    color: #1a1a1a;
-}
-
-body.app {
-    color: var(--primary-font-color);
-    background-color: #1a1a1a;
 }
 
 .container-full-height {
@@ -349,41 +281,10 @@ body.app {
     min-height: 60px;
 }
 
-.app-navbar-right {
-    padding-top: 17px;
-}
-
-.page-navbar-brand {
-    font-family: var(--brand-font);
-    color: var(--page-nav-brand-color)!important;
-    padding-left: 15px;
-    font-size: 32px;
-}
-
-.page-navbar {
-    background-color: #fefefe;
-    min-height: 60px;
-    z-index: 1;
-}
-
-.app-sidebar-nav {
-    padding-top: 13px;
-    background-color: var(--app-sidebar-background-color);
-}
-
-.app-sidebar-link {
-    color: var( --app-nav-link-color);
-}
-
 .app-sidebar-link-mobile{
     margin-left: 10px;
     font-size: 1rem;
     color: var(--font-dark-color);
-}
-
-.content-container {
-    background-color: var(--app-content-background-color);
-    min-height: 100vh;
 }
 
 
@@ -401,9 +302,6 @@ textarea:focus, input:focus {
     max-width: 285px;
 }
 
-.app-label{
-    display:None
-}
 
 .errors {
     color: red;
@@ -461,8 +359,6 @@ textarea:focus, input:focus {
     margin-left: 25px;
 }
 
-
-
 .cookie-consent-button{
     border:4px solid black;
     background-color: white;
@@ -477,22 +373,4 @@ textarea:focus, input:focus {
     padding: .65rem 1.25rem;
 }
 
-.app-container {
-    padding-top: 10px;
-    text-align: left;
-    background-color: #FEFEFE;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px 0px rgba(158, 158, 158, 0.26);
-}
 
-.app-form-wrapper {
-    width: 100%;
-    background-color: #FEFEFE;
-    border-radius: 8px;
-    /* box-shadow: 0px 0px 10px 0px rgba(158,158,158,0.26); */
-    padding: 10%;
-}
-
-.navbar-margin-bottom{
-    margin-bottom: 50px;
-}

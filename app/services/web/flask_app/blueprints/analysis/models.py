@@ -27,11 +27,24 @@ class CompanyFactAnalysis(db.Model, ModelUtils):
         super(CompanyFactAnalysis, self).__init__(**kwargs)
 
     @classmethod
-    def get_company_fact_analysis(cls, analysis_label, ticker):
-        results = CompanyFactAnalysis.query.filter(and_(
+    def get_company_fact_chart_data(cls, analysis_label, ticker):
+        results = CompanyFactAnalysis.query.with_entities(
+            CompanyFactAnalysis.ticker,
+            CompanyFactAnalysis.val,
+            CompanyFactAnalysis.frame
+        ).filter(and_(
             CompanyFactAnalysis.ticker == ticker,
             CompanyFactAnalysis.analysis_label == analysis_label
         )).all()
+        return results
+    
+    @classmethod
+    def get_company_fact(cls, analysis_label):
+        results = CompanyFactAnalysis.query.with_entities(
+            CompanyFactAnalysis.ticker
+        ).filter(
+            CompanyFactAnalysis.analysis_label == analysis_label
+        ).distinct()
         return results
     
 

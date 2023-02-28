@@ -25,23 +25,37 @@ def overview():
     form.analysis_label.choices = choices
     return render_template('analysis/overview.html', form=form)
 
-@analysis.route('/company-fact-analysis')
-def get_company_fact_analysis():
+@analysis.route('/company-fact-chart')
+def get_company_fact_chart():
     response = {
         'labels': [],
         'data': {}
     }
     analysis_label = request.args.get('analysis_label', None)
     ticker = request.args.get('ticker', None)
+
     if analysis_label is None or ticker is None:
         return jsonify({'error':'Could not find analysis'})
-    company_facts = CompanyFactAnalysis.get_company_fact_analysis(
+    company_facts = CompanyFactAnalysis.get_company_fact_chart_data(
         analysis_label, ticker)
 
     response['labels'].extend([x.frame for x in company_facts 
                 if x.frame not in response['labels']])
     response['data'][ticker] = [float(x.val) for x in company_facts]
     return jsonify(response)
+
+
+@analysis.route('/analysis/company-fact')
+def get_company_fact():
+    response = {'items':[], 'columns':['rank','ticker']}
+    analysis_label = request.args.get('query', None)
+    print(analysis_label)
+    company_facts = CompanyFactAnalysis.get_company_fact(
+        analysis_label)
+    response['items'] = [{'rank': i,'ticker':x.ticker} 
+        for i, x in enumerate(company_facts, start=1)]
+        
+    return jsonify(results=response)
 
 
 @limiter.limit("3/minute")

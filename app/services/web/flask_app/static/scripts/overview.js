@@ -1,4 +1,4 @@
-const picker = new easepick.create({
+/*const picker = new easepick.create({
     element: "#author",
     css: [
         "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css"
@@ -7,7 +7,7 @@ const picker = new easepick.create({
     plugins: [
         "RangePlugin"
     ]
-})
+})*/
 
 const MONTHS = [
     'January',
@@ -122,12 +122,31 @@ function handle_response(response) {
     }
 }
 
+search_url = '/analysis/company-fact';
+obj_view_endpoint = '/plant/view/';
+no_results_html = '<br>No results found';
+
+function set_chart_listeners(){
+    const chart_links = document.querySelectorAll('.ticker-chart-link');
+    chart_links.forEach(el => el.addEventListener('click', event => {
+        console.log(event.target.getAttribute("data-el"))
+        populate_analysis_chart(event.target.getAttribute("data-el"));
+        }));
+}
+
 
 document.getElementById('query_button').addEventListener('click', function () {
-
-    populate_chart(null);
-
+    search_list = new SearchList(search_url, obj_view_endpoint, no_results_html,1,set_chart_listeners);
+    
+    search_list.do_search(
+        document.getElementById("analysis_label").value);
+    
+console.log('done');
 }, false);
+
+
+
+
 
 function show_error(error_msg) {
     document.getElementById('warner').innerHTML = error_msg;
@@ -158,4 +177,23 @@ function populate_chart(title, author) {
             .then(content => build_chart(content))
             .catch(reason => show_error(reason));
     }
+}
+
+
+function populate_analysis_chart(ticker) {
+
+    //document.getElementById('warner').style.visibility = "hidden";
+    analysis_label = document.getElementById("analysis_label").value;
+
+   
+    document.getElementById('loader').style.visibility = "visible";
+    params = {
+        'analysis_label': analysis_label,
+        'ticker': ticker
+    };
+    do_get('/company-fact-chart', params)
+        .then(content => handle_response(content))
+        .then(content => build_chart(content))
+        .catch(reason => show_error(reason));
+    
 }
