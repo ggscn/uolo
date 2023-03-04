@@ -4,7 +4,7 @@ from .sqlalchemy_mixins import ModelMixin
 
 Base = declarative_base()
 
-class CompanyTicker(Base, ModelMixin):
+class CompanyTicker(ModelMixin, Base):
     __tablename__ = 'company_tickers'
 
     id = Column(Integer, primary_key=True)
@@ -12,3 +12,6 @@ class CompanyTicker(Base, ModelMixin):
     name = Column(String)
     ticker = Column(String)
     exchange = Column(String)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

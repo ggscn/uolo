@@ -58,6 +58,10 @@ class EdgarRequest():
 class EdgarCompanyTickerResponse():
     def __init__(self, api_response) -> None:
         self.api_response = api_response
+        self.validate_response_data()
+
+    def validate_response_data(self):
+        self.api_response = self.api_response.json()
 
     def transform(self):
         data = [{

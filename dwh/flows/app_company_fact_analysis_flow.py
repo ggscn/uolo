@@ -1,5 +1,6 @@
+import resolve_imports
 from prefect import flow, task
-from models.company_fact import CompanyFact, CompanyFactAnalysis
+from dwh.models.company_fact import CompanyFactAnalysis
 from scipy.stats import linregress
 from datetime import date
 import sqlalchemy
@@ -39,8 +40,8 @@ def get_profit_loss_analysis(table, pandas_engine):
         table.append(df.to_dict('records'))
         
 
-@flow(name="Update company facts")
-def update_company_facts():
+@flow(name="update-app-company-fact-analysis")
+def update_app_company_fact_analysis():
     url_object = sqlalchemy.engine.URL.create(
         "postgresql+psycopg2",
         username="pguser",
@@ -57,4 +58,4 @@ def update_company_facts():
     get_profit_loss_analysis(table, pandas_engine)
     
 if __name__ == '__main__':
-    update_company_facts()
+    update_app_company_fact_analysis()

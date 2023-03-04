@@ -1,21 +1,21 @@
-from lib.edgar import EdgarRequest
-from lib.table import Table
+import resolve_imports
+from dwh.lib.edgar import EdgarRequest
+from dwh.models.company_ticker import CompanyTicker
+from dwh.flows.dwh_company_fact_flow import update_company_facts
 from prefect import flow, task
-from models.company_ticker import CompanyTicker
-
 
 @task
 def get_company_tickers():
     results = EdgarRequest().get_company_tickers().results()
     return results
 
-@flow(name="Get company tickers")
+@flow(name="update-company-tickers")
 def update_company_tickers():
     company_tickers = get_company_tickers()
-    table = Table(CompanyTicker)
-    table.drop()
-    table.create()
+    table = CompanyTicker()
+    table.truncate()
     table.append(company_tickers)
+    update_company_facts()
     
 if __name__ == '__main__':
     update_company_tickers()
