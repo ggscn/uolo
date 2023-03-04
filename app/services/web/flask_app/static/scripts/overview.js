@@ -40,7 +40,7 @@ function months(config) {
 }
 
 const COLORS = [
-    '#4f4fad',
+    '#000',
     '#000',
 ];
 
@@ -97,7 +97,6 @@ function build_chart(chart_data) {
         datasets: []
     };
     Object.entries(chart_data['data']).forEach(([key, value], index) => {
-        console.log(index);
         data['datasets'].push({
             label: key,
             data: value,

@@ -485,12 +485,13 @@
     margin: var(--global-line-height) 0;
     color: var(--font-color);
     font-size: var(--global-font-size);
+    
   }
   
   table td,
   table th {
     vertical-align: top;
-    border-bottom: 1px solid var(--font-color);
+    border-bottom: 2px dashed var(--font-color);
     line-height: var(--global-line-height);
     padding: calc(var(--global-space) / 2);
     font-size: 1em;

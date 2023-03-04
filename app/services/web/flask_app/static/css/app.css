@@ -41,8 +41,13 @@
 }
 
 .action-button:active{
-    background-color: #4f4fad;
+    background-color: #ffff01;
     color: white;
+}
+
+select {
+    border: None;
+    border-bottom: dashed 2px;
 }
 
 
@@ -60,9 +65,8 @@
     left: -200px;
     background: #1a1a1a;
     position: absolute;
-    transition: all .3s ease-Out;
+    transition: all .1s ease-Out;
     bottom: 0;
-    text-decoration-style: dotted;
   }
   
   .action-button:hover #underline {
