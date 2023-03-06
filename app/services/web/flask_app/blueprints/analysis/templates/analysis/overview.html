@@ -5,7 +5,7 @@
 
 <div class=" h-50 container-fluid container-full-height container-main">
     <div class="row">
-        <div class="col-xl-3 col-lg-4 col-md-4 md-padding-right">
+        <div class="col-xl-4 col-lg-4 col-md-4 md-padding-right">
 
             <div class="row md-margin-top sm-margin-bottom">
                 <div class="col-lg-12">
@@ -14,12 +14,56 @@
                             <span class="tip-text">Select an analysis preset to start <a href="#more_info">Learn
                                     More</a>.</span>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="lg-margin-top lg-margin-bottom text-center">
+                                    {% call f.form_field(form.analysis_label, css_class="standard_form_field",
+                                    label_css_class="app-label", placeholder="Ticker") %}
+                                    {% endcall %}
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="lg-margin-top lg-margin-bottom text-center">
+                                    {% call f.form_field(form.indicator, css_class="standard_form_field",
+                                    label_css_class="app-label", placeholder="Ticker") %}
+                                    {% endcall %}
+                                </div>
 
-                        <div class="lg-margin-top lg-margin-bottom text-center">
-                            {% call f.form_field(form.analysis_label, css_class="standard_form_field",
-                            label_css_class="app-label", placeholder="Ticker") %}
-                            {% endcall %}
+                            </div>
+                            <div class="col">
+                                <div class="lg-margin-top lg-margin-bottom text-center">
+                                    {% call f.form_field(form.period, css_class="standard_form_field",
+                                    label_css_class="app-label", placeholder="Ticker") %}
+                                    {% endcall %}
+                                </div>
+                            </div>
                         </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <div class="lg-margin-top lg-margin-bottom text-center">
+                                    {% call f.form_field(form.filter_indicator, css_class="standard_form_field",
+                                    label_css_class="app-label", placeholder="Ticker") %}
+                                    {% endcall %}
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="lg-margin-top lg-margin-bottom text-center">
+                                    {% call f.form_field(form.filter_indicator_label, css_class="standard_form_field",
+                                    label_css_class="app-label", placeholder="Ticker") %}
+                                    {% endcall %}
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="lg-margin-top lg-margin-bottom text-center">
+                                    {% call f.form_field(form.filter_percentile, css_class="standard_form_field",
+                                    label_css_class="app-label", placeholder="Ticker") %}
+                                    {% endcall %}
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="md-margin-top lg-margin-bottom">
                             <div class="row">
                                 <div class="col">
@@ -45,7 +89,7 @@
 
             </div>
         </div>
-        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12 md-padding-right md-padding-left">
+        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 col-xs-12 md-padding-right md-padding-left">
             <div class=" row">
                 <div class="table-responsive tbodyDiv">
 
@@ -61,7 +105,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-6 col-lg-5 col-md-5 col-sm-12 col-xs-12 md-padding-left">
+        <div class="col-xl-6 col-lg-6 col-md-4 col-sm-12 col-xs-12 md-padding-left">
             <div class="row">
                 <div class="col-12">
                     <div class="mr-2 ml-0">

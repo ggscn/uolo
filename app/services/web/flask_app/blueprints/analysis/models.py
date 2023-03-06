@@ -10,6 +10,23 @@ from lib.sqlalchemy_utils import ModelUtils, EnumUtils
 from lib.company import Tiingo
 from flask_app.extensions import db
 
+class CompanyFactAnalysisRank(db.Model, ModelUtils):
+    __tablename__ = 'company_fact_analysis_ranks'
+
+    id = Column(Integer, primary_key=True)
+
+    ticker = Column(String())
+    analysis_label = Column(String())
+    analysis_value = Column(Float())
+    analysis_rank = Column(Integer())
+    analysis_percentile_rank = Column(Integer())
+    analysis_periods = Column(Integer())
+    fact_description = Column(String())
+    filing_day = Column(Date)
+
+    def __init__(self, **kwargs):
+        super(CompanyFactAnalysisRank, self).__init__(**kwargs)
+
 class CompanyFactAnalysis(db.Model, ModelUtils):
     __tablename__ = 'company_fact_analyses'
 

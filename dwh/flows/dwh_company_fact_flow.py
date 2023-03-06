@@ -7,27 +7,26 @@ from prefect import flow, task
 import time
 
 
-@task(task_run_name="write-company-{ticker_name}")
-def write_company_facts(table, ticker, ticker_name):
-    result = EdgarRequest().get_company_facts(
-        ticker.cik).result(
-            ticker=ticker.ticker,
-            exchange=ticker.exchange,
-            name=ticker.name
-        )
-    if result is not None:
-        table.append(result)
-        
+@task(task_run_name="write-company-facts")
+def write_company_facts(table):
+    tickers = CompanyTicker.all()
+    for i, ticker in enumerate(tickers):
+        result = EdgarRequest().get_company_facts(
+            ticker.cik).result(
+                ticker=ticker.ticker,
+                exchange=ticker.exchange,
+                name=ticker.name
+            )
+        if result is not None:
+            table.append(result)        
+        time.sleep(0.11)
+
 
 @flow(name="update-company-facts")
 def update_company_facts():
-    
     table = CompanyFact()
     table.truncate()
-    tickers = CompanyTicker.all()
-    for i, ticker in enumerate(tickers):
-        write_company_facts(table, ticker, ticker.name)
-        time.sleep(0.11)
+    write_company_facts(table)
     update_app_company_fact_analysis()
     
 if __name__ == '__main__':

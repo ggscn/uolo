@@ -95,31 +95,25 @@ class EdgarCompanyFactResponse():
             val = None
         return val
 
-    def retrieve_facts(self):
-        rule_sets = ['us-gaap', 'ifrs-full']
-        for rule_set in rule_sets:
-            if rule_set in self.api_response['facts']:
-                return rule_set, self.api_response['facts'][rule_set]
-
     def transform(self, **kwargs):
         data = []
-        rule_set, facts = self.retrieve_facts()
-        for description, units in facts.items():
-            for currency, entries in units['units'].items():
-                data.extend([{
-                    'description': description,
-                    'rule_set': rule_set,
-                    'currency': currency,
-                    'end': entry['end'],
-                    'val': self.validate_int(entry['val']),
-                    'fy': entry['fy'],
-                    'fp': entry['fp'],
-                    'form': entry['form'],
-                    'accn': entry['accn'],
-                    'frame': entry.get('frame', None),
-                    'filed': entry.get('filed', None),
-                    **kwargs
-                } for entry in entries])
+        for rule_set, facts in self.api_response['facts'].items():
+            for description, units in facts.items():
+                for currency, entries in units['units'].items():
+                    data.extend([{
+                        'description': description,
+                        'rule_set': rule_set,
+                        'currency': currency,
+                        'end': entry['end'],
+                        'val': self.validate_int(entry['val']),
+                        'fy': entry['fy'],
+                        'fp': entry['fp'],
+                        'form': entry['form'],
+                        'accn': entry['accn'],
+                        'frame': entry.get('frame', None),
+                        'filed': entry.get('filed', None),
+                        **kwargs
+                    } for entry in entries])
         return data
 
     def result(self, **kwargs):
