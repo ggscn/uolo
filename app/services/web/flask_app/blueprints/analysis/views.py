@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, request, jsonify, redirect,
 
 from flask_app.blueprints.analysis.forms import SearchForm
 from flask_app.blueprints.user.models import User
-from flask_app.blueprints.analysis.models import StockPrice, CompanyFactAnalysis
+from flask_app.blueprints.analysis.models import StockPrice, CompanyFactAnalysis, CompanyFactAnalysisRank
 from flask_app.extensions import limiter
 from sqlalchemy import Column
 
@@ -11,18 +11,23 @@ analysis = Blueprint('analysis', __name__, template_folder='templates')
 #don't forget to rate limit!
 @analysis.route('/')
 def home():
-    form = SearchForm()
-    return render_template('analysis/home.html', form=form, data=data)
+    return render_template('analysis/home.html')
 
 @analysis.route('/overview')
 def overview():
     form = SearchForm()
     labels = CompanyFactAnalysis.query.with_entities(
-        CompanyFactAnalysis.analysis_label
+        CompanyFactAnalysis.analysis_label,
+        CompanyFactAnalysis.fact_description
     ).distinct()
-    choices =[(i.analysis_label, i.analysis_label) for i in set(labels)]
-    choices = [('Select One', 'Select One')] + choices
+    choices =[(i.analysis_label, i.analysis_label) for i in labels]
+    choices = [('Select One', 'Select One')] + list(set(choices))
     form.analysis_label.choices = choices
+
+    choices =[(i.fact_description, i.fact_description) for i in set(labels)]
+    choices = [('Select One', 'Select One')] + choices
+    form.indicator.choices = choices
+    
     return render_template('analysis/overview.html', form=form)
 
 @analysis.route('/company-fact-chart')
@@ -32,12 +37,13 @@ def get_company_fact_chart():
         'data': {}
     }
     analysis_label = request.args.get('analysis_label', None)
+    indicator = request.args.get('indicator', None)
     ticker = request.args.get('ticker', None)
 
     if analysis_label is None or ticker is None:
         return jsonify({'error':'Could not find analysis'})
     company_facts = CompanyFactAnalysis.get_company_fact_chart_data(
-        analysis_label, ticker)
+        analysis_label, indicator, ticker)
 
     response['labels'].extend([x.frame for x in company_facts 
                 if x.frame not in response['labels']])
@@ -48,10 +54,11 @@ def get_company_fact_chart():
 @analysis.route('/analysis/company-fact')
 def get_company_fact():
     response = {'items':[], 'columns':['rank','ticker']}
-    analysis_label = request.args.get('query', None)
+    analysis_label = request.args.get('analysis_label', None)
+    indicator = request.args.get('indicator', None)
     print(analysis_label)
-    company_facts = CompanyFactAnalysis.get_company_fact(
-        analysis_label)
+    company_facts = CompanyFactAnalysisRank.get_company_fact(
+        analysis_label, indicator)
     response['items'] = [{'rank': i,'ticker':x.ticker} 
         for i, x in enumerate(company_facts, start=1)]
         

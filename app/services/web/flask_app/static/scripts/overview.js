@@ -138,7 +138,8 @@ document.getElementById('query_button').addEventListener('click', function () {
     search_list = new SearchList(search_url, obj_view_endpoint, no_results_html,1,set_chart_listeners);
     
     search_list.do_search(
-        document.getElementById("analysis_label").value);
+        document.getElementById("analysis_label").value,
+        document.getElementById("indicator").value);
     
 console.log('done');
 }, false);
@@ -183,12 +184,14 @@ function populate_analysis_chart(ticker) {
 
     //document.getElementById('warner').style.visibility = "hidden";
     analysis_label = document.getElementById("analysis_label").value;
+    indicator = document.getElementById("indicator").value;
 
    
     document.getElementById('loader').style.visibility = "visible";
     params = {
         'analysis_label': analysis_label,
-        'ticker': ticker
+        'ticker': ticker,
+        'indicator': indicator
     };
     do_get('/company-fact-chart', params)
         .then(content => handle_response(content))

@@ -3,7 +3,7 @@
 {% extends 'layouts/app.html' %}
 {% block content %}
 
-<div class=" h-50 container-fluid container-full-height container-main">
+<div class=" h-80 container-fluid container-full-height container-main">
     <div class="row">
         <div class="col-xl-4 col-lg-4 col-md-4 md-padding-right">
 
@@ -42,14 +42,14 @@
                         <div class="row">
                             <div class="col">
                                 <div class="lg-margin-top lg-margin-bottom text-center">
-                                    {% call f.form_field(form.filter_indicator, css_class="standard_form_field",
+                                    {% call f.form_field(form.f_indicator, css_class="standard_form_field",
                                     label_css_class="app-label", placeholder="Ticker") %}
                                     {% endcall %}
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="lg-margin-top lg-margin-bottom text-center">
-                                    {% call f.form_field(form.filter_indicator_label, css_class="standard_form_field",
+                                    {% call f.form_field(form.f_indicator_label, css_class="standard_form_field",
                                     label_css_class="app-label", placeholder="Ticker") %}
                                     {% endcall %}
                                 </div>
@@ -57,7 +57,7 @@
                             </div>
                             <div class="col">
                                 <div class="lg-margin-top lg-margin-bottom text-center">
-                                    {% call f.form_field(form.filter_percentile, css_class="standard_form_field",
+                                    {% call f.form_field(form.f_percentile, css_class="standard_form_field",
                                     label_css_class="app-label", placeholder="Ticker") %}
                                     {% endcall %}
                                 </div>

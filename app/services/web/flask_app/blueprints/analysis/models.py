@@ -26,6 +26,19 @@ class CompanyFactAnalysisRank(db.Model, ModelUtils):
 
     def __init__(self, **kwargs):
         super(CompanyFactAnalysisRank, self).__init__(**kwargs)
+    
+    @classmethod
+    def get_company_fact(cls, analysis_label, indicator):
+        results = CompanyFactAnalysisRank.query.with_entities(
+            CompanyFactAnalysisRank.ticker,
+            CompanyFactAnalysisRank.analysis_rank
+        ).filter(and_(
+            CompanyFactAnalysisRank.analysis_label == analysis_label,
+            CompanyFactAnalysisRank.fact_description == indicator
+        )).distinct().order_by(
+            CompanyFactAnalysisRank.analysis_rank
+        ).limit(500)
+        return results
 
 class CompanyFactAnalysis(db.Model, ModelUtils):
     __tablename__ = 'company_fact_analyses'
@@ -44,24 +57,16 @@ class CompanyFactAnalysis(db.Model, ModelUtils):
         super(CompanyFactAnalysis, self).__init__(**kwargs)
 
     @classmethod
-    def get_company_fact_chart_data(cls, analysis_label, ticker):
+    def get_company_fact_chart_data(cls, analysis_label, indicator, ticker):
         results = CompanyFactAnalysis.query.with_entities(
             CompanyFactAnalysis.ticker,
             CompanyFactAnalysis.val,
             CompanyFactAnalysis.frame
         ).filter(and_(
             CompanyFactAnalysis.ticker == ticker,
-            CompanyFactAnalysis.analysis_label == analysis_label
+            CompanyFactAnalysis.analysis_label == analysis_label,
+            CompanyFactAnalysis.fact_description == indicator
         )).all()
-        return results
-    
-    @classmethod
-    def get_company_fact(cls, analysis_label):
-        results = CompanyFactAnalysis.query.with_entities(
-            CompanyFactAnalysis.ticker
-        ).filter(
-            CompanyFactAnalysis.analysis_label == analysis_label
-        ).distinct()
         return results
     
 

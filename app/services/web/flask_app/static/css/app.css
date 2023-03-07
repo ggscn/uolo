@@ -99,17 +99,11 @@ select {
   }
 
 input[type=text].standard_form_field, input[type=date].standard_form_field {
-    border: 8px solid #1a1a1a;
-    padding-left: 10px;
-    -webkit-border-radius: var(--input-border-radius);
-    -moz-border-radius: var(--input-border-radius);
-    border-radius: var(--input-border-radius);
-    width: 100%;
-    height: 60px;
+    border:none;
+    border-bottom: 2px dashed #1a1a1a;
     background-color: var(--field-background-color);
     color: #1a1a1a;
     font-size: 16px;
-    font-weight: bold;
 }
 
 input[type=text].standard_form_field::placeholder {
@@ -134,7 +128,7 @@ input[type=text].standard_form_field:focus {
 
 input[type=text].standard_form_field:hover {
 
-    border-bottom: 8px solid #1a1a1a;
+    border-bottom: 2px solid #1a1a1a;
 }
 
 .about-text-block{
@@ -289,11 +283,6 @@ footer {
     margin-left: 10px;
     font-size: 1rem;
     color: var(--font-dark-color);
-}
-
-
-textarea:focus, input:focus {
-    outline: none;
 }
 
 .empty-list {

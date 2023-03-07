@@ -6,7 +6,22 @@ import sqlalchemy
 import numpy as np
 import pandas as pd
 
-rank_query_str_template = """select 
+rank_query_str_template = """
+    WITH i1 AS (
+    select 
+      ticker, 
+      count(*) as cnt 
+    from 
+      public.company_facts 
+    where 
+      description = '{}' and 
+      fy > 2020 and val != 0 and 
+      frame is not null and 
+      length(frame) != 6 
+    group by 
+      ticker
+    )
+    select 
       "end" as filing_day, 
       val, 
       ticker
@@ -17,6 +32,7 @@ rank_query_str_template = """select
       fy > 2020 and val != 0 and 
       frame is not null and 
       length(frame) != 6
+      and ticker in (SELECT ticker from i1 where cnt > {})
     order by 
       ticker, "end" asc limit 50000
 """
@@ -34,8 +50,7 @@ series_query_str_template = """SELECT
       description = '{}' and 
       fy > 2020 and val != 0 and 
       frame is not null and 
-      length(frame) != 6 and 
-      ticker = '{}'
+      length(frame) != 6
 """
 
 def get_pandas_db_engine():
@@ -65,7 +80,7 @@ def init_tables(database, truncate):
 def write_fact_slope(fact_description, analysis_periods=4, database='finance_flask_app_dev', truncate_tables=False):
     pandas_engine = get_pandas_db_engine()
     series_table, rank_table = init_tables(database, truncate_tables)
-    rank_query_str = rank_query_str_template.format(fact_description)
+    rank_query_str = rank_query_str_template.format(fact_description, fact_description, analysis_periods)
     df = pd.read_sql_query(rank_query_str, con=pandas_engine)
 
     df['analysis_value'] = (df.groupby('ticker')['val']
@@ -74,7 +89,7 @@ def write_fact_slope(fact_description, analysis_periods=4, database='finance_fla
         .reset_index(level=0, drop=True)
     )
 
-    df = df.sort_values('filing_day', ascending=False).drop_duplicates(["ticker"])
+    #df = df.sort_values('filing_day', ascending=False).drop_duplicates(["ticker"])
     df = df.sort_values(['analysis_value'], ascending=[False])
     df['analysis_percentile_rank'] = (df['analysis_value'].rank(pct=True) * 100).round().fillna(0.0).astype(int)
     df['analysis_rank'] = df.reset_index().index + 1
@@ -82,13 +97,12 @@ def write_fact_slope(fact_description, analysis_periods=4, database='finance_fla
     df['analysis_periods'] = analysis_periods
     df['fact_description'] = fact_description
     rank_table.append(df.to_dict('records'))
-    for i, ticker in enumerate(df.ticker.unique()):
-        series_query_str = series_query_str_template.format(
-            fact_description,ticker)
-        print(i, ticker)
-        df = pd.read_sql_query(series_query_str, con=pandas_engine)
-        df['analysis_label'] = 'Slope'
-        series_table.append(df.to_dict('records'))
+    
+    series_query_str = series_query_str_template.format(
+        fact_description)
+    df = pd.read_sql_query(series_query_str, con=pandas_engine)
+    df['analysis_label'] = 'Slope'
+    series_table.append(df.to_dict('records'))
         
 
 @flow(name="update-app-company-fact-analysis")

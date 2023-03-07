@@ -10,10 +10,11 @@ class SearchList {
     }
 
 
-    do_search(query) {
+    do_search(analysis_label, indicator) {
 
         let params = {
-            query: query
+            analysis_label: analysis_label,
+            indicator: indicator
         };
 
         do_get(search_url, params)
