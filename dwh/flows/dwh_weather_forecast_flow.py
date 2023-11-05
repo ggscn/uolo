@@ -1,6 +1,7 @@
 import resolve_imports
 import time
 import pandas as pd
+from dwh.flows.app_lng_weather_forecast_flow import forecast_lng_consumption
 from dwh.models.country_weather_history import CountryWeatherHistory
 from dwh.models.country_weather_forecast import CountryWeatherForecast
 from prefect import flow, task
@@ -46,6 +47,7 @@ def get_weather_forecasts():
     table.drop()
     table.create()
     table.append(data)
+    forecast_lng_consumption()
 
 if __name__ == '__main__':
     get_weather_forecasts()

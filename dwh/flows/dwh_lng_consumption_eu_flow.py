@@ -29,7 +29,8 @@ energy_balance_types = {
 def get_energy_type(energy_balance):
     return energy_balance_types[energy_balance]
 
-def parse_consumption_data():
+@flow(name='update-lng-consumption')
+def update_consumption_data():
     df = eurostat.get_data_df('nrg_cb_gasm')
     date_columns = [
         col for col in df.columns if isinstance(col, datetime.datetime) or 
@@ -53,4 +54,5 @@ def parse_consumption_data():
     table.truncate()
     table.append(df.to_dict('records'))
 
-parse_consumption_data()
+if __name__ == '__main__':
+    update_consumption_data()

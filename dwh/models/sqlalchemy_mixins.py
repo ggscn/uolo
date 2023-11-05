@@ -1,4 +1,5 @@
 import sqlalchemy
+import pandas as pd
 from sqlalchemy import select, inspect
 
 class ModelMixin:
@@ -21,10 +22,15 @@ class ModelMixin:
         return engine
     
     @classmethod
-    def query(cls, select_statement):
+    def query(cls, select_statement, to_df=False):
         engine = cls.create_engine()
         with engine.connect() as conn:
-            return conn.execute(select_statement)
+            if to_df:
+                return pd.read_sql_query(
+                    select_statement, con=engine)
+            else:
+                return conn.execute(
+                    select_statement)
         
     @classmethod
     def all(cls, limit=None):
