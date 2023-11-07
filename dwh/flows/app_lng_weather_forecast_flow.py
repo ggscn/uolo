@@ -1,13 +1,14 @@
 import resolve_imports
 import pandas as pd
-from io import BytesIO
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker  
-from dwh.models.sqlalchemy_mixins import ModelMixin
-from dwh.lib.discord_bot import DiscordSyncBot
-from datetime import date as dt, timedelta
+from io import BytesIO
 from prefect import flow, task
+from datetime import date as dt, timedelta
+from dwh.lib.discord_bot import DiscordSyncBot
+from dwh.models.sqlalchemy_mixins import ModelMixin
+from dwh.models.lng_consumption import LNGConsumptionForecast
 
 
 model_query = """select * from lng_consumption_temperature_daily_models"""
@@ -20,10 +21,12 @@ country_weather_forecasts
  group by country, day
 """
 
+
 def get_model(db):
     model_df = db.query(model_query, to_df=True)
     model_df['day'] = pd.to_datetime(model_df['day'])
     return model_df
+
 
 def get_forecasted_consumption(model_df, weather_forecast, num_days=9):
     data = []
@@ -49,6 +52,7 @@ def get_forecasted_consumption(model_df, weather_forecast, num_days=9):
     send_perc_diff_plot(sum_df)
     return sum_df
 
+
 def send_perc_diff_plot(df):
     plt.style.use("https://github.com/dhaitz/matplotlib-stylesheets/raw/master/pitayasmoothie-dark.mplstyle")
     plt.xticks(rotation = 45)
@@ -61,6 +65,7 @@ def send_perc_diff_plot(df):
         image_binary.seek(0)
         DiscordSyncBot().send(file_binary=image_binary)
     plt.clf()
+
 
 def send_timeseries_plot(df):
     plt.style.use("https://github.com/dhaitz/matplotlib-stylesheets/raw/master/pitayasmoothie-dark.mplstyle")
@@ -78,14 +83,18 @@ def send_timeseries_plot(df):
         DiscordSyncBot().send(file_binary=image_binary)
     plt.close()
 
+
 @flow(name='forecast-lng-consumption')
 def forecast_lng_consumption():
     db = ModelMixin()
     model_df = get_model(db)
     weather_forecast = db.query(
         weather_forecast_query, to_df=True).to_dict('records')
-    get_forecasted_consumption(
+    forecasted_consumption = get_forecasted_consumption(
         model_df, weather_forecast)
+    table = LNGConsumptionForecast()
+    table.append(forecasted_consumption)
+    
 
 if __name__ == '__main__':
     forecast_lng_consumption()

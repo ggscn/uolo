@@ -23,6 +23,21 @@ class LNGConsumptionTemperatureDailyModel(ModelMixin, Base):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
+class LNGConsumptionForecast(ModelMixin, Base):
+    __tablename__ = 'lng_consumption_forecasts'
+
+    id = Column(Integer, primary_key=True)
+    run_time = Column(DateTime)
+    day = Column(Date)
+    consumption = Column(Float)
+    historic_consumption = Column(Float)
+    perc_diff = Column(Float)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+
 class LNGConsumptionEU(ModelMixin, Base):
     __tablename__ = 'eu_lng_consumptions'
 
