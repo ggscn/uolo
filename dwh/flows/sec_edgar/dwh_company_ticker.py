@@ -1,7 +1,7 @@
 import resolve_imports
 from dwh.lib.edgar import EdgarRequest
 from dwh.models.company_ticker import CompanyTicker
-from dwh.flows.dwh_company_fact_flow import update_company_facts
+from dwh.flows.sec_edgar.dwh_company_fact import update_company_facts
 from prefect import flow, task
 
 @task

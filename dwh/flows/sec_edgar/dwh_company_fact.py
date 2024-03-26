@@ -2,7 +2,7 @@ import resolve_imports
 from dwh.lib.edgar import EdgarRequest
 from dwh.models.company_fact import CompanyFact
 from dwh.models.company_ticker import CompanyTicker
-from dwh.flows.app_company_fact_analysis_flow import update_app_company_fact_analysis
+from dwh.flows.sec_edgar.app_company_fact_analysis import update_app_company_fact_analysis
 from prefect import flow, task
 import time
 

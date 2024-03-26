@@ -1,5 +1,5 @@
 import resolve_imports
-from dwh.flows.dwh_company_ticker_flow import update_company_tickers
+from dwh.flows.sec_edgar.dwh_company_ticker import update_company_tickers
 from prefect.deployments import Deployment
 
 deployment = Deployment.build_from_flow(

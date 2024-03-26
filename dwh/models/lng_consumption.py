@@ -37,6 +37,16 @@ class LNGConsumptionForecast(ModelMixin, Base):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
+class LNGConsumptionTimeseriesForecast(ModelMixin, Base):
+    __tablename__ = 'lng_consumption_timeseries_forecasts'
+
+    id = Column(Integer, primary_key=True)
+    day = Column(Date)
+    consumption = Column(Float)
+    country = Column(String)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 class LNGConsumptionEU(ModelMixin, Base):
     __tablename__ = 'eu_lng_consumptions'

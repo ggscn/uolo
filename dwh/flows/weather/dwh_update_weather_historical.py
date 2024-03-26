@@ -15,6 +15,7 @@ def get_eu_weather():
     eu_weather['day'] = pd.to_datetime(eu_weather['date'].dt.strftime('%Y-%m-%d'))
     eu_weather = eu_weather[~(eu_weather['day'] < '2015-01-01')]
     eu_weather = eu_weather[~(eu_weather['day'] > '2022-12-31')]
+    eu_weather['average_temperature'] = (5/9) * (eu_weather['average_temperature'] - 32)
     return eu_weather
 
 
@@ -42,7 +43,6 @@ def process_weather():
     Tref = 18
     temperature_df = pd.concat([
         get_de_weather(), get_eu_weather()])
-    temperature_df['average_temperature'] = (5/9) * (temperature_df['average_temperature'] - 32)
     temperature_df['hdd'] = np.maximum(0, Tref - temperature_df['average_temperature'])
     temperature_df['day_month'] = temperature_df['day'].dt.strftime('%m-%d')
     average_temperatures = temperature_df.groupby(['day_month','country'])['average_temperature'].mean().reset_index()

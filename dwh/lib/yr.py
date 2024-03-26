@@ -1,4 +1,8 @@
 import requests
+try:
+    from .utils import retry
+except:
+    from utils import retry
 
 
 class YrQuery:
@@ -6,13 +10,14 @@ class YrQuery:
         self.user_agent = "PersonalWeatherTracker email"
         self.base_url = 'https://api.met.no/weatherapi'
 
+    @retry(10,60)
     def issue_request(self, url, params):
         headers = {
             'User-Agent': self.user_agent
         }
+
         response = requests.get(
             url, headers=headers, params=params).json()
-        
         return response
 
     def get_forecast(self, lat, lon):

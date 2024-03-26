@@ -27,7 +27,7 @@ from
  eu_lng_consumptions 
 where 
  energy_balance = 'IC_OBS' and 
- unit = 'MIO_M3' 
+ unit = 'MIO_M3'
 order by 
  time_period desc
 """

@@ -15,7 +15,7 @@ rank_query_str_template = """
       public.company_facts 
     where 
       description = '{}' and 
-      fy > 2020 and val != 0 and 
+      fy > 2020 and val != 0 and  val is not null and
       frame is not null and 
       length(frame) != 6 
     group by 
@@ -30,6 +30,7 @@ rank_query_str_template = """
     where 
       description = '{}' and 
       fy > 2020 and val != 0 and 
+       val is not null and
       frame is not null and 
       length(frame) != 6
       and ticker in (SELECT ticker from i1 where cnt > {})
@@ -68,8 +69,8 @@ def get_pandas_db_engine():
     return pandas_engine
 
 def init_tables(database, truncate):
-    series_table = CompanyFactAnalysis(database=database)
-    rank_table = CompanyFactAnalysisRank(database=database)
+    series_table = CompanyFactAnalysis()
+    rank_table = CompanyFactAnalysisRank()
     if truncate:
         series_table.truncate()
         rank_table.truncate()
@@ -109,10 +110,9 @@ def write_fact_slope(fact_description, analysis_periods=4, database='finance_fla
 def update_app_company_fact_analysis():
     for i, fact_description in enumerate(['InterestPaidNet','ProfitLoss']):
         if i == 0:
-             write_fact_slope(fact_description, truncate_tables=True)
+            write_fact_slope(fact_description, truncate_tables=True)
         else:
             write_fact_slope(fact_description, truncate_tables=False)
     
 if __name__ == '__main__':
-    
     update_app_company_fact_analysis()

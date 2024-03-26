@@ -1,7 +1,6 @@
 import resolve_imports
 import time
 import pandas as pd
-from dwh.flows.app_lng_weather_forecast_flow import forecast_lng_consumption
 from dwh.models.country_weather_history import CountryWeatherHistory
 from dwh.models.country_weather_forecast import CountryWeatherForecast
 from prefect import flow, task
@@ -24,8 +23,8 @@ def list_cities(num_cities=25):
             cities_list.append(city)
     return cities_list
 
-@flow(name='get-weather-forecasts')
-def get_weather_forecasts():
+@flow(name='update-weather-forecasts')
+def update_weather_forecasts():
     yr = YrQuery()
     data  = []
     for i, city in enumerate(list_cities()):
@@ -47,8 +46,7 @@ def get_weather_forecasts():
     table.drop()
     table.create()
     table.append(data)
-    forecast_lng_consumption()
 
 if __name__ == '__main__':
-    get_weather_forecasts()
+    update_weather_forecasts()
     
