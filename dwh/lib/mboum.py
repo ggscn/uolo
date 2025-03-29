@@ -123,3 +123,17 @@ class MBoumHTTP:
         response = self.request(url, params)
 
         return MBoumHistoryMonthlyResponse(response, symbol)
+
+    def get_balance_sheet(self, symbol):
+        params = {
+            'symbol': symbol
+        }
+
+        url = self.base_url + '/qu/quote/balance-sheet/'
+
+        response = self.request(url, params)
+
+        return response
+
+
+print(MBoumHTTP().get_balance_sheet('AAPL'))

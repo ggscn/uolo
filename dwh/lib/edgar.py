@@ -1,12 +1,16 @@
 import requests
 import zipfile
 import io
+import csv
+from pathlib import Path
 
 class EdgarRequest():
     def __init__(self) -> None:
         self.base_url_api = 'https://data.sec.gov/api'
+        self.base_url_bulk = 'https://www.sec.gov/files'
         self.base_url_legacy = "https://www.sec.gov/Archives"
         self.user_agent = "Personal Use Greg pguser@fastmail.com"
+        self.tmp_directory = Path.home() / 'downloads'
 
     def get_company_facts(self, cik):
         cik = str(cik).zfill(10)
@@ -23,20 +27,29 @@ class EdgarRequest():
 
         return EdgarCompanyFactResponse(response, cik)
 
-    def download_index(self):
+    def get_insider_transactions(self, year=None, quarter=None):
+        """Returns cleaned result of bulk insider transaction file
+
+        Example:
+        result = EdgarRequest().get_insider_transactions(2024,1).result()
+        print(result['REPORTINGOWNER.tsv'])
+        """
         headers = { 
             'User-Agent' : self.user_agent,
             'Accept-Encoding': 'gzip, deflate',
             'Host': 'www.sec.gov'
         }
-        year = '2022'
-        quarter = 'QTR3'
-        endpoint = f'edgar/full-index/{year}/{quarter}/master.zip'
-
-        response = self.do_request(url)
-
-        zfile = zipfile.ZipFile(io.BytesIO(response.content))
-        zfile.extractall("/home/pguser/downloads")
+        tmp_location = self.tmp_directory / f'insider_tx_{year}q{quarter}'
+        endpoint = f'{year}q{quarter}_form345.zip'
+        url = f'{self.base_url_bulk}/structureddata/data/insider-transactions-data-sets/{endpoint}'
+        
+        response = self.do_request(
+            url, headers)
+        
+        zfile = zipfile.ZipFile(
+            io.BytesIO(response.content))
+        zfile.extractall(tmp_location)
+        return EdgarBulkInsiderTransactionResponse(tmp_location)
 
     def get_company_tickers(self):
         headers = {
@@ -54,6 +67,32 @@ class EdgarRequest():
         response = requests.get(
             url, headers=headers)
         return response
+
+class EdgarBulkInsiderTransactionResponse():
+    def __init__(self, response_location) -> None:
+        self.response_location = response_location
+        self.response_files = [
+            'DERIV_HOLDING.tsv',
+            'DERIV_TRANS.tsv',
+            'NONDERIV_HOLDING.tsv',
+            'NONDERIV_TRANS.tsv',
+            'OWNER_SIGNATURE.tsv',
+            'REPORTINGOWNER.tsv',
+            'SUBMISSION.tsv'
+        ]
+
+    def parse_response_files(self):
+        result = {}
+        for response_file in self.response_files:
+            with open(self.response_location / response_file, 'r') as f:
+                rows = csv.reader(f, delimiter="\t", quotechar='"')
+                columns = next(rows)
+                result[response_file] = [{col: row[i] for i, col in 
+                    enumerate(columns)} for row in rows]
+        return result
+
+    def result(self):
+        return self.parse_response_files()
 
 class EdgarCompanyTickerResponse():
     def __init__(self, api_response) -> None:
